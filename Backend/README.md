@@ -1,12 +1,15 @@
 # User Registration API
 
 ## Endpoint
+
 `POST /users/register`
 
 ## Description
+
 This endpoint allows a new user to register by providing their personal information. The password is hashed before being stored in the database.
 
 ## Request Body
+
 The request body must be a JSON object containing the following fields:
 
 - `fullname`: An object containing:
@@ -16,6 +19,7 @@ The request body must be a JSON object containing the following fields:
 - `password`: A string representing the user's password (required, minimum length: 3 characters).
 
 ### Example Request
+
 ```json
 {
   "fullname": {
@@ -28,13 +32,14 @@ The request body must be a JSON object containing the following fields:
 ```
 
 ## Responses
+
 - **201 Created**: User successfully registered.
   - Response body will contain the user object.
-  
 - **400 Bad Request**: Validation errors occurred.
   - Response body will contain an array of error messages.
 
 ## Status Codes
+
 - `201`: User created successfully.
 - `400`: Validation errors in the request body.
 
@@ -43,18 +48,22 @@ The request body must be a JSON object containing the following fields:
 # User Login API
 
 ## Endpoint
+
 `POST /users/login`
 
 ## Description
+
 This endpoint allows an existing user to log in by providing their email and password. If the credentials are valid, a JWT token is returned.
 
 ## Request Body
+
 The request body must be a JSON object containing the following fields:
 
 - `email`: A string representing the user's email address (required, must be a valid email format).
 - `password`: A string representing the user's password (required, minimum length: 3 characters).
 
 ### Example Request
+
 ```json
 {
   "email": "john.doe@example.com",
@@ -63,6 +72,7 @@ The request body must be a JSON object containing the following fields:
 ```
 
 ## Responses
+
 - **200 OK**: User successfully logged in.
   - Response body will contain the user object and a JWT token.
   - Example:
@@ -74,7 +84,7 @@ The request body must be a JSON object containing the following fields:
           "firstname": "John",
           "lastname": "Doe"
         },
-        "email": "john.doe@example.com",
+        "email": "john.doe@example.com"
         // other user fields
       },
       "token": "jwt_token_here"
@@ -86,23 +96,30 @@ The request body must be a JSON object containing the following fields:
   - Response body will contain an error message.
 
 ## Status Codes
+
 - `200`: User logged in successfully.
 - `400`: Validation errors in the request body.
+
 # User Profile API
 
 ## Endpoint
+
 `GET /users/profile`
 
 ## Description
+
 Returns the profile information of the currently authenticated user. Requires a valid JWT token in the `Authorization` header (as `Bearer <token>`) or in the `token` cookie.
 
 ## Authentication
+
 - Required: Yes (JWT)
 
 ## Request Headers
+
 - `Authorization: Bearer <token>` (or send token as a cookie named `token`)
 
 ## Responses
+
 - **200 OK**: Returns the user profile object.
   - Example:
     ```json
@@ -127,18 +144,23 @@ Returns the profile information of the currently authenticated user. Requires a 
 # User Logout API
 
 ## Endpoint
+
 `POST /users/logout`
 
 ## Description
+
 Logs out the currently authenticated user by blacklisting their JWT token. Requires a valid JWT token in the `Authorization` header (as `Bearer <token>`) or in the `token` cookie.
 
 ## Authentication
+
 - Required: Yes (JWT)
 
 ## Request Headers
+
 - `Authorization: Bearer <token>` (or send token as a cookie named `token`)
 
 ## Responses
+
 - **200 OK**: Logout successful.
   - Example:
     ```json
@@ -152,4 +174,42 @@ Logs out the currently authenticated user by blacklisting their JWT token. Requi
     or
     ```json
     { "message": "Access denied. Token is blacklisted." }
+    ```
+# Captain Registration API
+## Endpoint
+  `POST /captains/register`
+
+## Description
+This endpoint allows a new captain to register by providing their personal and vehicle information. The password is hashed before being stored in the database.
+
+## Request Body
+- The request body must be a `JSON` object containing the following fields:
+
+  ```json
+  {
+    "fullname": {
+      "firstname": "Jane",
+      "lastname": "Smith"
+    },
+    "email": "jane.smith@example.com",
+    "password": "securepassword",
+    "vechile": {
+      "color": "red",
+      "plate": "HR 36 B 0777",
+      "capacity": 4,
+      "vechileType": "car"
+    }
+  }
+  ```
+## Example Request
+### Responses
+- **201**: Captain created successfully.
+  - Example:
+    ```json
+    { "message": "Captain successfully registered" }
+    ```
+- **400**: Validation errors in the request body.
+  - Example:
+    ```json
+    { "message": "Validation errors occurred" }
     ```
