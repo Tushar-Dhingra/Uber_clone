@@ -1,6 +1,7 @@
 const userModel = require("../models/user.model");
 const userService = require("../services/user.service");
 const { validationResult } = require("express-validator");
+const blacklistTokenModel = require("../models/blacklistToken.model");
 
 module.exports.registerUser = async (req, res, next) => {
   const errors = validationResult(req);
@@ -51,4 +52,17 @@ module.exports.getUserProfile = async (req, res, next) => {
     return res.status(401).json({ message: "Unauthorized access" });
   }
   res.status(200).json(req.user);
+}
+
+module.exports.logoutUser = async(req, res, next) => {
+    res.clearCookie("token");
+    const token = req.cookies.token || req.headers.authorization.split(" ")[1];
+
+    await blacklistTokenModel.create({ token }); 
+    //When a user logs out, you want to make sure their JWT (token) can't be used anymore.
+    //Since JWTs are stateless and can't be "deleted" from the client or server, blacklisting is a common solution.
+    //By saving the token in a blacklist, you can check this list on every protected route. If the token is found in the blacklist, you deny access.
+
+
+    res.status(200).json({ message: "Logout successful" });
 }

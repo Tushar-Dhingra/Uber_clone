@@ -88,3 +88,68 @@ The request body must be a JSON object containing the following fields:
 ## Status Codes
 - `200`: User logged in successfully.
 - `400`: Validation errors in the request body.
+# User Profile API
+
+## Endpoint
+`GET /users/profile`
+
+## Description
+Returns the profile information of the currently authenticated user. Requires a valid JWT token in the `Authorization` header (as `Bearer <token>`) or in the `token` cookie.
+
+## Authentication
+- Required: Yes (JWT)
+
+## Request Headers
+- `Authorization: Bearer <token>` (or send token as a cookie named `token`)
+
+## Responses
+- **200 OK**: Returns the user profile object.
+  - Example:
+    ```json
+    {
+      "_id": "user_id",
+      "fullname": {
+        "firstname": "John",
+        "lastname": "Doe"
+      },
+      "email": "john.doe@example.com"
+      // ...other fields
+    }
+    ```
+- **401 Unauthorized**: No token, invalid token, or user not found.
+  - Example:
+    ```json
+    { "message": "Unauthorized access" }
+    ```
+
+---
+
+# User Logout API
+
+## Endpoint
+`POST /users/logout`
+
+## Description
+Logs out the currently authenticated user by blacklisting their JWT token. Requires a valid JWT token in the `Authorization` header (as `Bearer <token>`) or in the `token` cookie.
+
+## Authentication
+- Required: Yes (JWT)
+
+## Request Headers
+- `Authorization: Bearer <token>` (or send token as a cookie named `token`)
+
+## Responses
+- **200 OK**: Logout successful.
+  - Example:
+    ```json
+    { "message": "Logout successful" }
+    ```
+- **401 Unauthorized**: No token, invalid token, or token is blacklisted.
+  - Example:
+    ```json
+    { "message": "Access denied. No token provided." }
+    ```
+    or
+    ```json
+    { "message": "Access denied. Token is blacklisted." }
+    ```
